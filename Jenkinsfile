@@ -8,20 +8,27 @@ String AWS_REGION = "us-west-2"  // Should we have an ap-southeast-2 repo? Maybe
 // This is a closure to capture out globals above. Groovy scoping is weird...
 def build_and_publish_container = { String project ->
     stage("Build and publish container: " + project) {
-        try {
-            sh "aws --region ${AWS_REGION} ecr create-repository --repository-name ${project}"
-            echo "AWS ECR Repository ${project} was created!"
-        } catch(_) {
-            echo "AWS ECR Repository ${project} already exists - skipping creation."
-        }
-        docker.withRegistry(DOCKER_REGISTRY_URL, DOCKER_REGISTRY_CREDENTIALS) {
-            String dockerfile_path = [project, "Dockerfile"].join("/")
+        withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: DOCKER_REGISTRY_CREDENTIALS, access_key_id: "AWS_ACCESS_KEY_ID", secret_access_key: "AWS_SECRET_ACCESS_KEY"]]) {
+            try {
+                sh "aws --region ${AWS_REGION} ecr create-repository --repository-name ${project}"
+                echo "AWS ECR Repository ${project} was created!"
+            } catch(_) {
+                echo "AWS ECR Repository ${project} already exists - skipping creation."
+            }
+            environment {
+                AWS_ACCESS_KEY_ID = access_key_id
+                AWS_SECRET_ACCESS_KEY = secret_access_key
+            }
+            docker.withRegistry(DOCKER_REGISTRY_URL) {
+                String dockerfile_path = [project, "Dockerfile"].join("/")
 
-            // docker build -f openvas/Dockerfile openvas
-            String build_args = ["-f", dockerfile_path, project].join(" ")
-            def image = docker.build("${project}:studiosity-${env.BUILD_ID}", build_args)
-            image.push()
+                // docker build -f openvas/Dockerfile openvas
+                String build_args = ["-f", dockerfile_path, project].join(" ")
+                def image = docker.build("${project}:studiosity-${env.BUILD_ID}", build_args)
+                image.push()
+            }
         }
+
     }
 }
 
@@ -40,7 +47,6 @@ pipeline {
                         build_and_publish_container(project)
                     }
                 }
-                    
             }
         }
     }
