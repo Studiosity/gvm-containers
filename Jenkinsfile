@@ -12,6 +12,7 @@ def build_and_publish_container = { String project ->
             environment {
                 AWS_ACCESS_KEY_ID = AWS_ACCESS_KEY_ID
                 AWS_SECRET_ACCESS_KEY = AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION = AWS_REGION
             }
             try {
                 sh "aws --region ${AWS_REGION} ecr create-repository --repository-name ${project}"
