@@ -1,4 +1,4 @@
-FROM postgres:10
+FROM postgres:12
 LABEL maintainer="Richard Phillis <rphillis@studiosity.com>"
 # LABEL maintainer="Mohammad Razavi <mrazavi64@gmail.com>"
 
