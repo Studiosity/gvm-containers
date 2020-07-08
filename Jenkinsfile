@@ -1,7 +1,6 @@
 // A list of the directories which contain Dockerfiles.
 // Each is to be built into a Docker image.
-// List<String> DOCKER_PROJECTS = ["gsad", "gvmd", "gvm-postgres", "openvas"]
-List<String> DOCKER_PROJECTS = ["gsad", "gvmd", "openvas"]
+List<String> DOCKER_PROJECTS = ["gsad", "gvmd", "gvm-postgres", "openvas"]
 String DOCKER_REGISTRY_URL = "https://303925148639.dkr.ecr.us-west-2.amazonaws.com"
 String AWS_CREDS = "2f464b59-46bf-4e14-b291-0c8b1c4e6e08"
 String AWS_REGION = "us-west-2"  // Should we have an ap-southeast-2 repo? Maybe not...
