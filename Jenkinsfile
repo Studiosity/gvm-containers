@@ -2,16 +2,16 @@
 // Each is to be built into a Docker image.
 List<String> DOCKER_PROJECTS = ["gsad", "gvmd", "gvm-postgres", "openvas"]
 String DOCKER_REGISTRY_URL = "https://303925148639.dkr.ecr.us-west-2.amazonaws.com"
-String DOCKER_REGISTRY_CREDENTIALS = "2f464b59-46bf-4e14-b291-0c8b1c4e6e08"
+String AWS_CREDS = "2f464b59-46bf-4e14-b291-0c8b1c4e6e08"
 String AWS_REGION = "us-west-2"  // Should we have an ap-southeast-2 repo? Maybe not...
 
 // This is a closure to capture out globals above. Groovy scoping is weird...
 def build_and_publish_container = { String project ->
     stage("Build and publish container: " + project) {
-        withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: DOCKER_REGISTRY_CREDENTIALS, access_key_id: "AWS_ACCESS_KEY_ID", secret_access_key: "AWS_SECRET_ACCESS_KEY"]]) {
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: AWS_CREDS, usernameVariable: "AWS_ACCESS_KEY_ID", passwordVariable: "AWS_SECRET_ACCESS_KEY"]]) {
             environment {
-                AWS_ACCESS_KEY_ID = access_key_id
-                AWS_SECRET_ACCESS_KEY = secret_access_key
+                AWS_ACCESS_KEY_ID = AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY = AWS_SECRET_ACCESS_KEY
             }
             try {
                 sh "aws --region ${AWS_REGION} ecr create-repository --repository-name ${project}"
