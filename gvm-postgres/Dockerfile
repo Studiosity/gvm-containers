@@ -11,4 +11,5 @@ RUN set -ex; \
     echo "deb http://ppa.launchpad.net/mrazavi/gvm/ubuntu focal main" > /etc/apt/sources.list.d/mrazavi-ubuntu-gvm-focal.list; \
     apt-get update; \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libgvm-pg-server0; \
+    localedef -i en_US -f UTF-8 en_US.UTF-8; \
     rm -rf /var/lib/apt/lists/*
