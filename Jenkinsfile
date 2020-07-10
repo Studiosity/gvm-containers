@@ -29,7 +29,7 @@ def build_and_publish_container = { String project ->
                     set +x
                     \$(aws ecr get-login --no-include-email --region ${env.AWS_DEFAULT_REGION})
                 """
-                    def image = docker.build("${project}:studiosity-${env.BUILD_ID}", build_args)
+                    def image = docker.build("${project}:${env.BRANCH_NAME}-${env.BUILD_ID}", build_args)
                     image.push()
             }
         }
