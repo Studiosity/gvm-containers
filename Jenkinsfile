@@ -38,7 +38,7 @@ def build_and_publish_container = { String project ->
 }
 
 pipeline {
-    agent any
+    agent { label "ec2-docker-spot-t3-micro" }
     stages {
         stage("Checkout SCM") {
             steps {
